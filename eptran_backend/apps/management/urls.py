@@ -4,7 +4,6 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r"user", api.UserViewSet)
-router.register(r"register-user", api.UserRegister, basename="register-user")
 router.register(r"admin", api.AdminViewSet)
 router.register(r"register-admin", api.AdminRegister, basename="register-admin")
 router.register(r"register-staff", api.StaffRegister, basename="register-staff")
