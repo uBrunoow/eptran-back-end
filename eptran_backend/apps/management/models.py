@@ -36,10 +36,6 @@ class BrazilianState(models.TextChoices):
     TO = "TO", "Tocantins"
     DF = "DF", "Distrito Federal"
 
-class TransactionType(models.TextChoices):
-    RENT = "RENT", "Rent"
-    SALE = "SALE", "Sale"
-
 class SexType(models.TextChoices):
     MALE = "MALE", "Male"
     FEMALE = "FEMALE", "Female"
@@ -78,64 +74,105 @@ class User(AbstractCUser):
         return self.email + " | " + self.first_name + " " + self.last_name
 
 class Admin(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='admin')
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        help_text="Usuário",
+        verbose_name="Usuário",
+        on_delete=models.CASCADE,
+    )
     permissions = models.CharField(max_length=50, choices=PermissionsType.choices, default=PermissionsType.ADMIN)
+    phone = models.CharField(
+        max_length=50,
+        help_text="Telefone principal para contato",
+        verbose_name="Telefone",
+    )
+    cpf = models.CharField(verbose_name="CPF", max_length=20, blank=True, null=True)
+    address = models.CharField(
+        help_text="Endereço oficial", verbose_name="Endereço", max_length=100
+    )
+    address_number = models.CharField("Número", max_length=50)
+    address_complement = models.CharField(
+        "Complemento", max_length=1000, null=True, blank=True
+    )
+    city = models.CharField(help_text="Cidade", verbose_name="Cidade", max_length=50)
+    state = models.CharField(
+        help_text="Estado da federação",
+        verbose_name="Estado",
+        max_length=2,
+        choices=BrazilianState.choices,
+    )
+    zipcode = models.CharField(help_text="CEP", max_length=20)
 
     def __str__(self):
         return f'Admin {self.id} of user {self.user.name}'
 
 class Staff(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='staff')
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        help_text="Usuário",
+        verbose_name="Usuário",
+        on_delete=models.CASCADE,
+    )
     permissions = models.CharField(max_length=50, choices=PermissionsType.choices, default=PermissionsType.STAFF)
+    phone = models.CharField(
+        max_length=50,
+        help_text="Telefone principal para contato",
+        verbose_name="Telefone",
+    )
+    cpf = models.CharField(verbose_name="CPF", max_length=20, blank=True, null=True)
+    address = models.CharField(
+        help_text="Endereço oficial", verbose_name="Endereço", max_length=100
+    )
+    address_number = models.CharField("Número", max_length=50)
+    address_complement = models.CharField(
+        "Complemento", max_length=1000, null=True, blank=True
+    )
+    city = models.CharField(help_text="Cidade", verbose_name="Cidade", max_length=50)
+    state = models.CharField(
+        help_text="Estado da federação",
+        verbose_name="Estado",
+        max_length=2,
+        choices=BrazilianState.choices,
+    )
+    zipcode = models.CharField(help_text="CEP", max_length=20)
 
     def __str__(self):
         return f'Staff {self.id} of user {self.user.name}'
 
 class Student(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student')
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        help_text="Usuário",
+        verbose_name="Usuário",
+        on_delete=models.CASCADE,
+    )
     permissions = models.CharField(max_length=50, choices=PermissionsType.choices, default=PermissionsType.USER)
-
-    def __str__(self):
-        return f'Student {self.id} of user {self.user.name}'
-    
-class News(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255, null=False)
-    subtitle = models.TextField(null=False)
-    first_paragraph = models.TextField(null=False)
-    second_paragraph = models.TextField(null=True, blank=True)
-    third_paragraph = models.TextField(null=True, blank=True)
-    fourth_paragraph = models.TextField(null=True, blank=True)
-    fifth_paragraph = models.TextField(null=True, blank=True)
-    image = models.CharField(max_length=255, null=False)
-
-    def __str__(self):
-        return self.title
-    
-class SavedNews(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    news = models.ForeignKey(News, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'Saved news {self.news.title} by user {self.user.name}'
-    
-class Game(BaseModel):
-    name = models.CharField(max_length=255, null=False)
-    classification = models.CharField(
+    phone = models.CharField(
+        max_length=50,
+        help_text="Telefone principal para contato",
+        verbose_name="Telefone",
+    )
+    cpf = models.CharField(verbose_name="CPF", max_length=20, blank=True, null=True)
+    address = models.CharField(
+        help_text="Endereço oficial", verbose_name="Endereço", max_length=100
+    )
+    address_number = models.CharField("Número", max_length=50)
+    address_complement = models.CharField(
+        "Complemento", max_length=1000, null=True, blank=True
+    )
+    city = models.CharField(help_text="Cidade", verbose_name="Cidade", max_length=50)
+    state = models.CharField(
+        help_text="Estado da federação",
+        verbose_name="Estado",
+        max_length=2,
+        choices=BrazilianState.choices,
+    )
+    zipcode = models.CharField(help_text="CEP", max_length=20)
+    education = models.CharField(
         max_length=50,
         choices=EducationType.choices,
         null=False
     )
 
     def __str__(self):
-        return self.name
-
-class GameStatistics(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    time_spent = models.DurationField(null=True, blank=True)
-    progress = models.IntegerField(null=True, blank=True)
-    fastest_time = models.DurationField(null=True, blank=True)
-
-    def __str__(self):
-        return f'Statistics for {self.game.name} by user {self.user.name if self.user else "Anonymous"}'
+        return f'Student {self.id} of user {self.user.name}'

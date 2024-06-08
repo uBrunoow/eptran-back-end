@@ -6,12 +6,11 @@ router = routers.DefaultRouter()
 router.register(r"user", api.UserViewSet)
 router.register(r"register-user", api.UserRegister, basename="register-user")
 router.register(r"admin", api.AdminViewSet)
+router.register(r"register-admin", api.AdminRegister, basename="register-admin")
+router.register(r"register-staff", api.StaffRegister, basename="register-staff")
+router.register(r"register-student", api.StudentRegister, basename="register-student")
 router.register(r"staff", api.StaffViewSet)
 router.register(r"student", api.StudentViewSet)
-router.register(r"news", api.NewsViewSet)
-router.register(r"saved-news", api.SavedNewsViewSet)
-router.register(r"game", api.GameViewSet)
-router.register(r"game-statistics", api.GameStatisticsViewSet)
 
 urlpatterns = [
     path("logout/", api.LogoutView.as_view()),

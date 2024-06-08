@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, News, SavedNews, Game, GameStatistics, Admin, Staff, Student
+from .models import User, Admin, Staff, Student
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
@@ -117,34 +117,81 @@ class ProfileTokenObtainPairSerializer(TokenObtainPairSerializer):
 class AdminReadOnlySerializer(serializers.ModelSerializer):
     class Meta:
         model = Admin
-        fields = ["id", "user", "permissions", "created_at", "updated_at"]
+        fields = ["id", "user", "permissions", "phone", "cpf", "address", "address_number", "address_complement", "city", "state", "zipcode", "created_at", "updated_at"]
+
+class AdminRegisterSerializer(serializers.ModelSerializer):
+    user = UserRegisterSerializer(required=True)
+
+    class Meta:
+        model = Admin
+        fields = "__all__"
+        extra_kwargs = {"id": {"read_only": True}}
+
+    def create(self, validated_data):
+        user_data = validated_data.pop("user")
+
+        user_serializer = UserRegisterSerializer(data=user_data)
+
+        if user_serializer.is_valid():
+            user = user_serializer.save()
+
+            seller = Admin.objects.create(user=user, **validated_data)
+
+            return seller
+        else:
+            raise serializers.ValidationError(user_serializer.errors)
+
 
 class StaffReadOnlySerializer(serializers.ModelSerializer):
     class Meta:
         model = Staff
-        fields = ["id", "user", "permissions", "created_at", "updated_at"]
+        fields = ["id", "user", "permissions", "phone", "cpf", "address", "address_number", "address_complement", "city", "state", "zipcode", "created_at", "updated_at"]
 
+class StaffRegisterSerializer(serializers.ModelSerializer):
+    user = UserRegisterSerializer(required=True)
+
+    class Meta:
+        model = Staff
+        fields = "__all__"
+        extra_kwargs = {"id": {"read_only": True}}
+
+    def create(self, validated_data):
+        user_data = validated_data.pop("user")
+
+        user_serializer = UserRegisterSerializer(data=user_data)
+
+        if user_serializer.is_valid():
+            user = user_serializer.save()
+
+            seller = Staff.objects.create(user=user, **validated_data)
+
+            return seller
+        else:
+            raise serializers.ValidationError(user_serializer.errors)
+        
 class StudentReadOnlySerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ["id", "user", "permissions", "created_at", "updated_at"]
+        fields = ["id", "user", "permissions", "phone", "cpf", "address", "address_number", "address_complement", "city", "state", "zipcode", "education" ,"created_at", "updated_at"]
 
-class NewsReadOnlySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = News
-        fields = ["id", "title", "subtitle", "first_paragraph", "second_paragraph", "third_paragraph", "fourth_paragraph", "fifth_paragraph", "image","created_at", "updated_at"]
+class StudentRegisterSerializer(serializers.ModelSerializer):
+    user = UserRegisterSerializer(required=True)
 
-class SavedNewsReadOnlySerializer(serializers.ModelSerializer):
     class Meta:
-        model = SavedNews
-        fields = ["id", "user", "news", "created_at", "updated_at"]
+        model = Student
+        fields = "__all__"
+        extra_kwargs = {"id": {"read_only": True}}
 
-class GameReadOnlySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Game
-        fields = ["id", "name", "classification"]
+    def create(self, validated_data):
+        user_data = validated_data.pop("user")
 
-class GameStatisticsReadOnlySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GameStatistics
-        fields = ["id", "user", "game", "time_spent", "progress" , "fastest_time" , "created_at" , "updated_at"]
+        user_serializer = UserRegisterSerializer(data=user_data)
+
+        if user_serializer.is_valid():
+            user = user_serializer.save()
+
+            seller = Student.objects.create(user=user, **validated_data)
+
+            return seller
+        else:
+            raise serializers.ValidationError(user_serializer.errors)

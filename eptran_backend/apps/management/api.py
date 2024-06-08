@@ -11,7 +11,7 @@ from rest_framework import (
     viewsets,
 )
 from utils.actions import DRFAction
-from .models import ( User, Admin, GameStatistics, Game, News, SavedNews, Staff, Student)
+from .models import ( User, Admin, Staff, Student)
 from .serializers import (
     ProfileTokenObtainPairSerializer,
     UserChangePasswordSerializer,
@@ -21,10 +21,9 @@ from .serializers import (
     AdminReadOnlySerializer,
     StaffReadOnlySerializer,
     StudentReadOnlySerializer,
-    NewsReadOnlySerializer,
-    SavedNewsReadOnlySerializer,
-    GameReadOnlySerializer,
-    GameStatisticsReadOnlySerializer,
+    AdminRegisterSerializer,
+    StaffRegisterSerializer,
+    StudentRegisterSerializer,
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -108,31 +107,46 @@ class AdminViewSet(viewsets.ModelViewSet):
     queryset = Admin.objects.all()
     serializer_class = AdminReadOnlySerializer
 
+class AdminRegister(
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
+    serializer_class = AdminRegisterSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = Admin.objects.none()
+
+    def perform_create(self, serializer):
+        res = super().perform_create(serializer)
+        return res
+
 class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()
     serializer_class = StaffReadOnlySerializer
+
+class StaffRegister(
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
+    serializer_class = StaffRegisterSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = Staff.objects.none()
+
+    def perform_create(self, serializer):
+        res = super().perform_create(serializer)
+        return res
 
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentReadOnlySerializer
 
-class NewsViewSet(viewsets.ModelViewSet):
-    queryset = News.objects.all()
-    serializer_class = NewsReadOnlySerializer
+class StudentRegister(
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
+    serializer_class = StudentRegisterSerializer
+    permission_classes = [permissions.AllowAny]
+    queryset = Student.objects.none()
 
-class SavedNewsViewSet(viewsets.ModelViewSet):
-    queryset = SavedNews.objects.all()
-    serializer_class = SavedNewsReadOnlySerializer
-
-class GameViewSet(viewsets.ModelViewSet):
-    queryset = Game.objects.all()
-    serializer_class = GameReadOnlySerializer
-
-class GameStatisticsViewSet(viewsets.ModelViewSet):
-    queryset = GameStatistics.objects.all()
-    serializer_class = GameStatisticsReadOnlySerializer
-
-class GameStatisticsViewSet(viewsets.ModelViewSet):
-    queryset = GameStatistics.objects.all()
-    serializer_class = GameStatisticsReadOnlySerializer
-
+    def perform_create(self, serializer):
+        res = super().perform_create(serializer)
+        return res

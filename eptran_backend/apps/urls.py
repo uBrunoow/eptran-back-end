@@ -19,6 +19,8 @@ urlpatterns = [
         "schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"
     ),
     path("management/", include("apps.management.urls")),
+    path("news/", include("apps.news.urls")),
+    path("games/", include("apps.games.urls")),
     # path("commercial/", include("apps.commercial.urls")),
     path("token/", ProfileTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),

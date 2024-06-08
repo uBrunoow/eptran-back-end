@@ -42,7 +42,7 @@ migrate:
 	poetry run eptran_backend/manage.py migrate
 
 makemigrations:
-	poetry run eptran_backend/manage.py makemigrations management
+	poetry run eptran_backend/manage.py makemigrations news
 
 devdb:
 	sudo docker compose -f docker-compose-devdb.yml up --build -d

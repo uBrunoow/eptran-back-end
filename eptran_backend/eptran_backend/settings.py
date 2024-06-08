@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "cuser",
     "apps.management",
+    "apps.news",
+    "apps.games",
 ]
 
 MIDDLEWARE = [
