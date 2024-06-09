@@ -33,6 +33,15 @@ class Game(BaseModel):
         choices=EducationType.choices,
         null=False
     )
+    link = models.CharField(max_length=255, null=False, default="")
+    description = models.TextField(null=False, default="")
+    image = models.ImageField(
+        upload_to="games/game/image",
+        help_text="Imagem Capa do Jogo",
+        verbose_name="Capa",
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.name

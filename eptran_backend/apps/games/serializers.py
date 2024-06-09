@@ -6,7 +6,7 @@ from django.db import transaction
 class GameReadOnlySerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
-        fields = ["id", "name", "classification"]
+        fields = ["id", "name", "classification", "image", "link", "description", "created_at", "updated_at"]
 
 class GameStatisticsReadOnlySerializer(serializers.ModelSerializer):
     class Meta:
